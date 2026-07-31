@@ -2,7 +2,6 @@
 package com.intellij.workspaceModel.ide.impl.legacyBridge.module
 
 import com.intellij.facet.impl.FacetEventsPublisher
-import com.intellij.openapi.components.service
 import com.intellij.openapi.components.serviceAsync
 import com.intellij.openapi.diagnostic.debug
 import com.intellij.openapi.diagnostic.logger
@@ -34,7 +33,6 @@ import com.intellij.workspaceModel.ide.getJpsProjectConfigLocation
 import com.intellij.workspaceModel.ide.impl.VirtualFileUrlBridge
 import com.intellij.workspaceModel.ide.impl.jps.serialization.BaseIdeSerializationContext
 import com.intellij.workspaceModel.ide.impl.jps.serialization.CachingJpsFileContentReader
-import com.intellij.workspaceModel.ide.impl.legacyBridge.facet.FacetEntityChangeListener
 import com.intellij.workspaceModel.ide.impl.legacyBridge.library.ProjectLibraryTableBridgeImpl.Companion.libraryMap
 import com.intellij.workspaceModel.ide.impl.legacyBridge.module.roots.ModuleLibraryTableBridgeImpl
 import com.intellij.workspaceModel.ide.impl.legacyBridge.module.roots.ModuleRootComponentBridge
@@ -42,9 +40,7 @@ import com.intellij.workspaceModel.ide.impl.legacyBridge.project.ModuleRootListe
 import com.intellij.workspaceModel.ide.legacyBridge.ModuleBridge
 import com.intellij.workspaceModel.ide.toPath
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.jetbrains.annotations.ApiStatus
 import java.io.IOException
 import java.nio.file.Path
@@ -70,21 +66,22 @@ internal class ModuleManagerInitProjectActivity : InitProjectActivity {
 @ApiStatus.Internal
 open class ModuleManagerComponentBridge(private val project: Project, coroutineScope: CoroutineScope)
   : ModuleManagerBridgeImpl(project = project, coroutineScope = coroutineScope, moduleRootListenerBridge = ModuleRootListenerBridgeImpl) {
-    init {
-    // a default project doesn't have facets
-    if (!project.isDefault) {
-      // Instantiate facet change listener as early as possible
-      project.service<FacetEntityChangeListener>()
-    }
-  }
+  // facets are disabled in rebased
+  //  init {
+  //  // a default project doesn't have facets
+  //  if (!project.isDefault) {
+  //    // Instantiate facet change listener as early as possible
+  //    project.service<FacetEntityChangeListener>()
+  //  }
+  //}
 
   @Suppress("UNCHECKED_CAST")
   override fun initializeBridges(event: Map<Class<*>, List<EntityChange<*>>>, builder: MutableEntityStorage) {
     // Initialize modules
     initializeModuleBridges(event, builder)
 
-    // Initialize facets
-    project.service<FacetEntityChangeListener>().initializeFacetBridge(event, builder)
+    // Initialize facets (disabled in rebased)
+    //project.service<FacetEntityChangeListener>().initializeFacetBridge(event, builder)
 
     // Initialize module libraries
     val moduleLibraryChanges = ((event[LibraryEntity::class.java] as? List<EntityChange<LibraryEntity>>) ?: emptyList())
@@ -171,10 +168,11 @@ open class ModuleManagerComponentBridge(private val project: Project, coroutineS
   }
 
   final override fun initFacets(modules: Collection<Pair<ModuleEntity, ModuleBridge>>, globalWsmAppliedToProjectWsm: CompletableDeferred<Project>?) {
-    coroutineScope.launch(CoroutineName("init facets")) {
-      globalWsmAppliedToProjectWsm?.await() // PythonFacetConfiguration expects to find an SDK by its name in ProjectJdkTable (which looks it up in project WSM)
-      ModuleBridgeImpl.initFacets(modules = modules, project = project)
-    }
+    // facets are disabled in rebased
+    //coroutineScope.launch(CoroutineName("init facets")) {
+    //  globalWsmAppliedToProjectWsm?.await() // PythonFacetConfiguration expects to find an SDK by its name in ProjectJdkTable (which looks it up in project WSM)
+    //  ModuleBridgeImpl.initFacets(modules = modules, project = project)
+    //}
   }
 
   override fun createModule(

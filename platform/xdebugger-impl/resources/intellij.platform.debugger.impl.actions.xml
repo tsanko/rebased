@@ -1,0 +1,5 @@
+<idea-plugin>
+  <actions>
+    <action id="Debugger.RestoreBreakpoint" class="com.intellij.openapi.actionSystem.EmptyAction"/>
+  </actions>
+</idea-plugin>

@@ -17,13 +17,23 @@ See [this youtrack issue](https://youtrack.jetbrains.com/issue/IJPL-72504/Make-g
 
 ### Linux
 
-Download the appimage from [GitHub releases](https://github.com/DetachHead/rebased/releases).
+We recommend installing the AppImage with with [AppManager](https://github.com/kem-a/AppManager) to install it to your applications menu, and for automatic updates:
 
-We recommend using either [AppManager](https://github.com/kem-a/AppManager) or [Gear Lever](https://github.com/mijorus/gearlever) to install it to your applications menu, and for automatic updates.
+|Architecture|Install via AppManager|Manual Download|
+|-|-|-|
+|x86_64|[Install](https://detachhead.codeberg.page/urlwrapper/?url=appimg://install?url=https://github.com/DetachHead/rebased/releases/latest/download/Rebased-x86_64.AppImage)|[Download](https://github.com/DetachHead/rebased/releases/latest/download/Rebased-x86_64.AppImage)
+|aarch64|[Install](https://detachhead.codeberg.page/urlwrapper/?url=appimg://install?url=https://github.com/DetachHead/rebased/releases/latest/download/Rebased-aarch64.AppImage)|[Download](https://github.com/DetachHead/rebased/releases/latest/download/Rebased-aarch64.AppImage)
+
+Alternatively you can download the `.tar.gz` from [GitHub Releases](https://github.com/DetachHead/rebased/releases)
 
 ### Windows
 
-You can either download the installer `.exe` from [GitHub releases](https://github.com/DetachHead/rebased/releases) or install via winget:
+|Architecture|Installer|Portable `.zip`|
+|-|-|-|
+|x86_64|[Download](https://github.com/DetachHead/rebased/releases/latest/download/rebased.exe)|[Download](https://github.com/DetachHead/rebased/releases/latest/download/rebased.win.zip)|
+|aarch64|[Download](https://github.com/DetachHead/rebased/releases/latest/download/rebased-aarch64.exe)|[Download](https://github.com/DetachHead/rebased/releases/latest/download/rebased-aarch64.win.zip)|
+
+Alternatively you can install via winget:
 
 ```ps1
 winget install detachhead.rebased --source winget
@@ -37,19 +47,22 @@ Install with [homebrew](https://brew.sh/):
 brew install detachhead/tap/rebased
 ```
 
-<details>
-  <summary>Manual installation</summary>
+Alternatively you can download the `.dmg` manually:
 
-Download the `.dmg` from [GitHub releases](https://github.com/DetachHead/rebased/releases)
+> [!WARNING]
+> 
+> When installing the `.dmg` manually, you may see the following error message after copying `Rebased.app` to your Applications folder:
+> > "Rebased.app" is damaged and can't be opened. You should move it to the Bin.
+> 
+> **This is Apple lying to you.** Nothing is "damaged", it's just not code-signed with an Apple Developer certificate. To fix it, run the following command:
+> ```bash
+> xattr -rd com.apple.quarantine /Applications/Rebased.app
+> ```
 
-After copying `Rebased.app` to your Applications folder, you may see the following error message:
-> "Rebased.app" is damaged and can't be opened. You should move it to the Bin.
-
-**This is Apple lying to you.** Nothing is "damaged", it's just not code-signed with an Apple Developer certificate. To fix it, run the following command:
-  ```bash
-  xattr -rd com.apple.quarantine /Applications/Rebased.app
-  ```
-</details>
+|Architecture|Download|
+|-|-|
+|Apple Silicon (aarch64)|[Download](https://github.com/DetachHead/rebased/releases/latest/download/rebased-aarch64.dmg)|
+|Intel (x86_64)|[Download](https://github.com/DetachHead/rebased/releases/latest/download/rebased.dmg)|
 
 ## Exclusive Features
 
@@ -89,7 +102,9 @@ One of the goals of Rebased is to prevent users from having to install bloated p
 
 (currently only one language, but feel free to open an [issue](https://github.com/DetachHead/rebased/issues/new/choose) or [PR](https://github.com/DetachHead/rebased/compare) for others)
 
-## Plugins Disclaimer
+## Plugins
+
+### Compatibility disclaimer
 
 While installing plugins from the marketplace is supported, note that many of the core components otherwise present in every JetBrains IDE are disabled in Rebased. This means some plugins may not work properly (or at all) if they depend on such components.
 
@@ -97,6 +112,22 @@ If you encounter any problems with a git-related plugin, you may open an issue, 
 
 - issues about language specific-plugins or other plugins that aren't related to git functionality are likely to be considered out-of-scope for Rebased, but will be assessed on a case-by-case basis
 - if fixing an issue with a git-related plugin requires re-enabling bloated IDE features that should otherwise not be required in a git client, it may still be considered out-of-scope
+
+### For plugin developers
+
+If you need to debug your plugin in Rebased, the IntelliJ platform gradle plugin [supports debugging with a local instance of the IDE](https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html#dependenciesLocalPlatform). You can configure it to use Rebased.
+
+> [!NOTE]
+> If you're on linux using the AppImage, you'll have to either extract or mount it first. If you're using AppManager, you can click "Extract AppImage". Alternatively you can run `./Rebased.AppImage --appimage-mount` to mount it instead.
+> 
+> Once mounted/extracted, set the `local` path to the `usr` directory inside the AppImage's filesystem, for example:
+> ```kts
+> dependencies {
+>   intellijPlatform {
+>     local("/tmp/.mount_Rebaseccgcph/usr")
+>   }
+> }
+> ```
 
 ## Contributing
 

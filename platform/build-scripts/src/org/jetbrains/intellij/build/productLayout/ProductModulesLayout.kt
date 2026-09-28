@@ -22,19 +22,23 @@ import org.jetbrains.intellij.build.impl.PluginLayout
  */
 val DEFAULT_BUNDLED_PLUGINS: PersistentList<String> = persistentListOf(
   //"intellij.dev",
-  "intellij.java.aetherDependencyResolver.plugin",
+  //"intellij.java.aetherDependencyResolver.plugin",
   //"intellij.jcef.plugin",
   "intellij.libraries.misc.plugin",
   "intellij.platform.bookmarks.plugin",
   "intellij.grid.core.plugin",
   "intellij.platform.navbar.plugin",
+  //"intellij.platform.problemView.plugin",
   //"intellij.platform.testRunner.plugin",
   "intellij.platform.recentFiles.plugin",
   //"intellij.platform.structuralSearch.plugin",
   "intellij.platform.structureView.plugin",
+  // this seems like bloat (it's used for the Task Management plugin) which we would ideally disable in rebased,
+  // but GitToolBox depends on it. it's a very popular 3rd party git-focused plugin so we make an effort to support it
+  "intellij.platform.tasks.plugin",
   //"intellij.platform.execution.serviceView.plugin",
   //"intellij.platform.todo.plugin",
-  //"intellij.platform.acp.plugin",
+  "intellij.platform.vcs.plugin",
   "intellij.platform.images",
 )
 
@@ -95,6 +99,9 @@ class ProductModulesLayout {
    * it's strongly recommended to move that directory outside the module source roots.</strong>
    */
   internal val moduleExcludes: MutableMap<String, MutableList<String>> = LinkedHashMap()
+
+  @ApiStatus.Internal
+  fun getModuleExcludesModuleNames(): Set<String> = moduleExcludes.keys
 
   /**
    * Additional customizations of platform JARs. **This is a temporary property added to keep layout of some products.**

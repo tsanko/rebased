@@ -28,7 +28,7 @@ public final class ApplicationNamesInfo {
   private static volatile ApplicationNamesInfo instance;
 
   private static @NotNull XmlElement loadData() {
-    String prefix = System.getProperty(PlatformUtils.PLATFORM_PREFIX_KEY, "");
+    String prefix = System.getProperty(PlatformUtils.PLATFORM_PREFIX_KEY, "Rebased");
     String appInfoData = getAppInfoData();
 
     if (AppMode.isRunningFromDevBuild() && appInfoData.isEmpty()) {
@@ -148,7 +148,8 @@ public final class ApplicationNamesInfo {
     assert names != null;
     myProductName = names.getAttributeValue("product");
     myFullProductName = names.getAttributeValue("fullname", myProductName);
-    myEditionName = names.getAttributeValue("edition");
+    String editionName = names.getAttributeValue("edition");
+    myEditionName = editionName == null || editionName.isEmpty() ? null : editionName;
     myScriptName = names.getAttributeValue("script");
     myMotto = names.getAttributeValue("motto", "The Drive to Develop");
   }
